@@ -1,0 +1,66 @@
+{
+  "root": true,
+  "parser": "babel-eslint",
+  "extends": [
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:import/errors",
+    "plugin:import/warnings",
+    "plugin:jsx-a11y/recommended",
+    "plugin:react-hooks/recommended",
+    "airbnb"
+  ],
+  "env": {
+    "browser": true,
+    "commonjs": true,
+    "es6": true,
+    "node": true
+  },
+  "parserOptions": {
+    "ecmaVersion": 2018,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  },
+  "rules": {
+    "react/no-multi-comp": 0,
+    "import/default": 0,
+    "import/no-duplicates": 0,
+    "import/named": 0,
+    "import/namespace": 0,
+    "import/no-unresolved": 0,
+    "import/no-named-as-default": 2,
+    "comma-dangle": 0,  // not sure why airbnb turned this on. gross!
+    "linebreak-style": 0,
+    "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
+    "object-curly-spacing": 0,
+    "jsx-quotes": 0,
+    "quotes": 0,
+    "arrow-body-style": 0,
+    "newIsCap": 0,
+    "new-cap": 0,
+    "react/jsx-curly-brace-presence": 0,
+    "jsx-a11y/anchor-is-valid": 0,
+    "react/require-default-props": 0,
+    "no-nested-ternary": 0,
+    "react/forbid-prop-types": 0,
+    "no-unused-vars": 0,
+    "no-param-reassign": 0,
+    "no-shadow": 0,
+    "react/prop-types":  0,
+    "consistent-return": 0,
+    "react/no-array-index-key": 0,
+    "no-underscore-dangle": 0,
+    "react/no-unused-prop-types": 0,
+    "react/default-props-match-prop-types": 0,
+    "no-case-declarations": 0,
+    "max-len": ["error", { "code": 500 }],
+    "no-plusplus": ["error", { "allowForLoopAfterthoughts": true }]
+  }
+}
