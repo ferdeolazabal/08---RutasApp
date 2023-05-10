@@ -30,22 +30,21 @@ export const PermissionsProvider = ({ children }: any) => {
 
     const askLocationPermission = async () => {
         let permissionStatus: PermissionStatus;
-        if (Platform.OS === 'ios') {
-            permissionStatus = await request(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
-        } else {
-            permissionStatus = await request(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION);
-        }
+
+        Platform.OS === 'ios'
+            ? (permissionStatus = await request(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE))
+            : (permissionStatus = await request(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION));
+
         console.log({ permissionStatus });
         setPermissions({ ...permissions, locationStatus: permissionStatus });
     };
 
     const checkLocationPermission = async () => {
         let permissionStatus: PermissionStatus;
-        if (Platform.OS === 'ios') {
-            permissionStatus = await check(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
-        } else {
-            permissionStatus = await check(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION);
-        }
+        Platform.OS === 'ios'
+            ? (permissionStatus = await check(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE))
+            : (permissionStatus = await check(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION));
+
         console.log({ permissionStatus });
         setPermissions({ ...permissions, locationStatus: permissionStatus });
     };
