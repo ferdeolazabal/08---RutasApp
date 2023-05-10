@@ -1,12 +1,12 @@
 import { View, Text } from 'react-native';
 import React from 'react';
 
-const MapScreen = () => {
+const LoadingScreen = () => {
     return (
         <View>
-            <Text style={{ color: 'black' }}>MapScreen</Text>
+            <Text style={{ color: 'black' }}>LoadingScreen</Text>
         </View>
     );
 };
 
-export default MapScreen;
+export default LoadingScreen;
