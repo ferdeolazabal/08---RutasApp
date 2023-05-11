@@ -1,17 +1,20 @@
 import React, { useContext } from 'react';
-import { Button, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import { PermissionContext } from '../context/PermissionsContext';
+import BlackButton from '../components/BlackButton';
 
 const PermissionsScreen = () => {
     const { permissions, askLocationPermission } = useContext(PermissionContext);
 
     return (
         <View style={styles.container}>
-            <Text style={styles.text}>PermissionsScreen</Text>
+            <Text style={styles.text}>Es necesario el uso del GPS para usar esta aplicación</Text>
 
-            <Button title="Permiso" onPress={askLocationPermission} />
+            <BlackButton title="༼ つ ◕_◕ ༽つ" onPress={askLocationPermission} />
             <View>
-                <Text style={styles.text}>{JSON.stringify(permissions, null, 5)}</Text>
+                <Text style={{ color: 'black', marginBottom: 30 }}>
+                    {JSON.stringify(permissions, null, 5)}
+                </Text>
             </View>
         </View>
     );
@@ -20,7 +23,14 @@ const PermissionsScreen = () => {
 export default PermissionsScreen;
 
 const styles = StyleSheet.create({
-    text: { color: 'black' },
+    text: {
+        color: 'black',
+        // marginVertical: 30,
+        width: 250,
+        fontSize: 18,
+        textAlign: 'center',
+        marginBottom: 30,
+    },
     container: {
         flex: 1,
         justifyContent: 'center',
