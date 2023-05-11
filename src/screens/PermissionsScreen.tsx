@@ -25,7 +25,6 @@ export default PermissionsScreen;
 const styles = StyleSheet.create({
     text: {
         color: 'black',
-        // marginVertical: 30,
         width: 250,
         fontSize: 18,
         textAlign: 'center',
