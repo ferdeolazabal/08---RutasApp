@@ -9,20 +9,28 @@ interface Props {
 }
 
 const Map = ({ markers }: Props) => {
-    const { initialPosition, hasLocation, getCurrentLocation, followUserLocation, userLocation } =
-        useLocation();
+    const {
+        initialPosition,
+        hasLocation,
+        // getCurrentLocation,
+        followUserLocation,
+        userLocation,
+        stopFollowUserLocation,
+    } = useLocation();
 
     const mapViewRef = useRef<MapView>();
+    const following = useRef<boolean>(true);
 
     useEffect(() => {
         followUserLocation();
         return () => {
-            // cancelar seguimiento
-            console.log('destroy');
+            stopFollowUserLocation();
         };
     }, []);
 
     useEffect(() => {
+        following.current = false;
+        // if (!following.current) return;
         mapViewRef.current?.animateCamera({
             center: userLocation,
             zoom: 15,
@@ -30,6 +38,7 @@ const Map = ({ markers }: Props) => {
     }, [userLocation]);
 
     // const centerPosition = async () => {
+    //     following.current =true
     //     const location = await getCurrentLocation();
     //     mapViewRef.current?.animateCamera({
     //         center: location,
@@ -55,21 +64,13 @@ const Map = ({ markers }: Props) => {
                 loadingEnabled={true}
                 showsBuildings={true}
                 showsTraffic={showTraffic}
+                onTouchStart={(e) => JSON.stringify(e)}
                 initialRegion={{
                     latitude: initialPosition?.latitude,
                     longitude: initialPosition?.longitude,
                     latitudeDelta: 0.015,
                     longitudeDelta: 0.0121,
-                }}>
-                {/* <Marker
-                    coordinate={{
-                        latitude: initialPosition?.latitude,
-                        longitude: initialPosition?.longitude,
-                    }}
-                    title="Esto es un titulo"
-                    description="Esta es una descripción!"
-                /> */}
-            </MapView>
+                }}></MapView>
             <Fab
                 iconName="car"
                 style={{

@@ -1,5 +1,5 @@
+import { useEffect, useState, useRef } from 'react';
 import { Location } from '../interfaces/appInterfaces';
-import { useEffect, useState } from 'react';
 import Geolocation, { GeolocationResponse } from '@react-native-community/geolocation';
 
 export const useLocation = () => {
@@ -13,6 +13,8 @@ export const useLocation = () => {
         longitude: 0,
     });
 
+    const watchId = useRef<number>();
+
     useEffect(() => {
         getCurrentLocation().then((location) => {
             setInitialPosition(location);
@@ -25,7 +27,6 @@ export const useLocation = () => {
         return new Promise((resolve, reject) => {
             Geolocation.getCurrentPosition(
                 ({ coords }: GeolocationResponse) => {
-                    console.log('getCurrentLocation', JSON.stringify(coords, null, 5));
                     resolve({
                         latitude: coords?.latitude,
                         longitude: coords?.longitude,
@@ -35,16 +36,15 @@ export const useLocation = () => {
                 {
                     enableHighAccuracy: true,
                     // timeout: 2000000,
-                    // maximumAge:1000
+                    // maximumAge: 1000,
                 },
             );
         });
     };
 
     const followUserLocation = () => {
-        Geolocation.watchPosition(
+        watchId.current = Geolocation.watchPosition(
             ({ coords }: GeolocationResponse) => {
-                console.log('followUserLocation', JSON.stringify(coords, null, 5));
                 setUserLocation({
                     latitude: coords.latitude,
                     longitude: coords.longitude,
@@ -55,9 +55,13 @@ export const useLocation = () => {
                 distanceFilter: 10,
                 enableHighAccuracy: true,
                 // timeout: 2000000,
-                // maximumAge:1000
+                // maximumAge: 1000,
             },
         );
+    };
+
+    const stopFollowUserLocation = () => {
+        if (watchId.current) Geolocation.clearWatch(watchId.current);
     };
 
     return {
@@ -66,5 +70,6 @@ export const useLocation = () => {
         getCurrentLocation,
         followUserLocation,
         userLocation,
+        stopFollowUserLocation,
     };
 };
