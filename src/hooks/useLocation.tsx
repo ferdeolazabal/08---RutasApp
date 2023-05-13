@@ -1,6 +1,6 @@
+import { Location } from '../interfaces/appInterfaces';
 import { useEffect, useState } from 'react';
 import Geolocation, { GeolocationResponse } from '@react-native-community/geolocation';
-import { Location } from '../interfaces/appInterfaces';
 
 export const useLocation = () => {
     const [hasLocation, setHasLocation] = useState(false);
@@ -9,23 +9,36 @@ export const useLocation = () => {
         longitude: 0,
     });
 
-    const location = ({ coords }: GeolocationResponse) => {
-        setInitialPosition({
-            latitude: coords?.latitude,
-            longitude: coords?.longitude,
-        });
-        setHasLocation(true);
-    };
-
     useEffect(() => {
-        Geolocation.getCurrentPosition(location, (err: any) => console.log({ err }), {
-            distanceFilter: 100,
-            enableHighAccuracy: true,
+        getCurrentLocation().then((location) => {
+            setInitialPosition(location);
+            setHasLocation(true);
         });
     }, []);
+
+    const getCurrentLocation = (): Promise<Location> => {
+        return new Promise((resolve, reject) => {
+            Geolocation.getCurrentPosition(
+                ({ coords }: GeolocationResponse) => {
+                    resolve({
+                        latitude: coords?.latitude,
+                        longitude: coords?.longitude,
+                    });
+                },
+                (err: any) => reject({ err }),
+                {
+                    distanceFilter: 100,
+                    enableHighAccuracy: true,
+                    // timeout: 2000000,
+                    // maximumAge:1000
+                },
+            );
+        });
+    };
 
     return {
         initialPosition,
         hasLocation,
+        getCurrentLocation,
     };
 };
