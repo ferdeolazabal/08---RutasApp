@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { PermissionContext } from '../context/PermissionsContext';
 import BlackButton from '../components/BlackButton';
-
+// AIzaSyAE7FuGJy_Rxd8sEYFjXbHVUZUZWVef-qA
 const PermissionsScreen = () => {
     const { permissions, askLocationPermission } = useContext(PermissionContext);
 
