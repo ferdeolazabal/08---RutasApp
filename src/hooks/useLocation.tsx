@@ -8,10 +8,15 @@ export const useLocation = () => {
         latitude: 0,
         longitude: 0,
     });
+    const [userLocation, setUserLocation] = useState<Location>({
+        latitude: 0,
+        longitude: 0,
+    });
 
     useEffect(() => {
         getCurrentLocation().then((location) => {
             setInitialPosition(location);
+            setUserLocation(location);
             setHasLocation(true);
         });
     }, []);
@@ -20,6 +25,7 @@ export const useLocation = () => {
         return new Promise((resolve, reject) => {
             Geolocation.getCurrentPosition(
                 ({ coords }: GeolocationResponse) => {
+                    console.log('getCurrentLocation', JSON.stringify(coords, null, 5));
                     resolve({
                         latitude: coords?.latitude,
                         longitude: coords?.longitude,
@@ -27,7 +33,6 @@ export const useLocation = () => {
                 },
                 (err: any) => reject({ err }),
                 {
-                    distanceFilter: 100,
                     enableHighAccuracy: true,
                     // timeout: 2000000,
                     // maximumAge:1000
@@ -36,9 +41,30 @@ export const useLocation = () => {
         });
     };
 
+    const followUserLocation = () => {
+        Geolocation.watchPosition(
+            ({ coords }: GeolocationResponse) => {
+                console.log('followUserLocation', JSON.stringify(coords, null, 5));
+                setUserLocation({
+                    latitude: coords.latitude,
+                    longitude: coords.longitude,
+                });
+            },
+            (err: any) => console.log({ err }),
+            {
+                distanceFilter: 10,
+                enableHighAccuracy: true,
+                // timeout: 2000000,
+                // maximumAge:1000
+            },
+        );
+    };
+
     return {
         initialPosition,
         hasLocation,
         getCurrentLocation,
+        followUserLocation,
+        userLocation,
     };
 };

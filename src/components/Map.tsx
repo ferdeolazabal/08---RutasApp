@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import { useLocation } from '../hooks/useLocation';
 import LoadingScreen from '../screens/LoadingScreen';
@@ -9,17 +9,35 @@ interface Props {
 }
 
 const Map = ({ markers }: Props) => {
-    const { initialPosition, hasLocation, getCurrentLocation } = useLocation();
+    const { initialPosition, hasLocation, getCurrentLocation, followUserLocation, userLocation } =
+        useLocation();
 
     const mapViewRef = useRef<MapView>();
 
-    const centerPosition = async () => {
-        const location = await getCurrentLocation();
+    useEffect(() => {
+        followUserLocation();
+        return () => {
+            // cancelar seguimiento
+            console.log('destroy');
+        };
+    }, []);
+
+    useEffect(() => {
         mapViewRef.current?.animateCamera({
-            center: location,
+            center: userLocation,
             zoom: 15,
         });
-    };
+    }, [userLocation]);
+
+    // const centerPosition = async () => {
+    //     const location = await getCurrentLocation();
+    //     mapViewRef.current?.animateCamera({
+    //         center: location,
+    //         zoom: 15,
+    //     });
+    // };
+
+    const [showTraffic, setShowTraffic] = useState(false);
 
     if (!hasLocation) {
         return <LoadingScreen />;
@@ -32,12 +50,11 @@ const Map = ({ markers }: Props) => {
                 style={{ flex: 1 }}
                 provider={PROVIDER_GOOGLE}
                 showsUserLocation
-                // tintColor="true"
-                // followsUserLocation
-                // liteMode={true}
+                userLocationUpdateInterval={1}
+                zoomControlEnabled
                 loadingEnabled={true}
-                // showsBuildings={true}
-                // showsTraffic={true}
+                showsBuildings={true}
+                showsTraffic={showTraffic}
                 initialRegion={{
                     latitude: initialPosition?.latitude,
                     longitude: initialPosition?.longitude,
@@ -54,13 +71,13 @@ const Map = ({ markers }: Props) => {
                 /> */}
             </MapView>
             <Fab
-                iconName="locate"
+                iconName="car"
                 style={{
                     position: 'absolute',
-                    bottom: 20,
-                    right: 20,
+                    bottom: 17,
+                    right: 60,
                 }}
-                onPress={centerPosition}
+                onPress={() => setShowTraffic(!showTraffic)}
             />
         </>
     );
