@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
+import MapView, { Marker, PROVIDER_GOOGLE, Polyline } from 'react-native-maps';
 import { useLocation } from '../hooks/useLocation';
 import LoadingScreen from '../screens/LoadingScreen';
 import Fab from './Fab';
@@ -9,6 +9,9 @@ interface Props {
 }
 
 const Map = ({ markers }: Props) => {
+    const [showTraffic, setShowTraffic] = useState(false);
+    const [showPolyline, setShowPolyline] = useState(false);
+
     const {
         initialPosition,
         hasLocation,
@@ -16,6 +19,7 @@ const Map = ({ markers }: Props) => {
         followUserLocation,
         userLocation,
         stopFollowUserLocation,
+        routeLines,
     } = useLocation();
 
     const mapViewRef = useRef<MapView>();
@@ -46,8 +50,6 @@ const Map = ({ markers }: Props) => {
     //     });
     // };
 
-    const [showTraffic, setShowTraffic] = useState(false);
-
     if (!hasLocation) {
         return <LoadingScreen />;
     }
@@ -61,25 +63,52 @@ const Map = ({ markers }: Props) => {
                 showsUserLocation
                 userLocationUpdateInterval={1}
                 zoomControlEnabled
-                loadingEnabled={true}
+                // loadingEnabled={true}
                 showsBuildings={true}
                 showsTraffic={showTraffic}
-                onTouchStart={(e) => JSON.stringify(e)}
+                // onTouchStart={(e) => JSON.stringify(e)}
                 initialRegion={{
                     latitude: initialPosition?.latitude,
                     longitude: initialPosition?.longitude,
                     latitudeDelta: 0.015,
                     longitudeDelta: 0.0121,
                 }}></MapView>
-            <Fab
-                iconName="car"
-                style={{
-                    position: 'absolute',
-                    bottom: 17,
-                    right: 60,
-                }}
-                onPress={() => setShowTraffic(!showTraffic)}
-            />
+
+            {showPolyline && (
+                <Polyline coordinates={routeLines} strokeColor="black" strokeWidth={3} />
+            )}
+            {/* <Marker
+                    coordinate={{
+                        latitude: initialPosition?.latitude,
+                        longitude: initialPosition?.longitude,
+                    }}
+                    title="Esto es un titulo"
+                    description="Esta es una descripción!"
+                /> */}
+            {hasLocation && (
+                <>
+                    <Fab
+                        iconName="car"
+                        style={{
+                            position: 'absolute',
+                            bottom: 105,
+                            right: 12,
+                        }}
+                        onPress={() => setShowTraffic(!showTraffic)}
+                        isActive={showTraffic}
+                    />
+                    <Fab
+                        iconName="brush"
+                        style={{
+                            position: 'absolute',
+                            bottom: 155,
+                            right: 12,
+                        }}
+                        onPress={() => setShowPolyline(!showPolyline)}
+                        isActive={showPolyline}
+                    />
+                </>
+            )}
         </>
     );
 };

@@ -3,22 +3,32 @@ import { Location } from '../interfaces/appInterfaces';
 import Geolocation, { GeolocationResponse } from '@react-native-community/geolocation';
 
 export const useLocation = () => {
+    const initialLocation = {
+        latitude: 0,
+        longitude: 0,
+    };
     const [hasLocation, setHasLocation] = useState(false);
-    const [initialPosition, setInitialPosition] = useState<Location>({
-        latitude: 0,
-        longitude: 0,
-    });
-    const [userLocation, setUserLocation] = useState<Location>({
-        latitude: 0,
-        longitude: 0,
-    });
+    const [initialPosition, setInitialPosition] = useState<Location>(initialLocation);
+    const [userLocation, setUserLocation] = useState<Location>(initialLocation);
+    const [routeLines, setRouteLines] = useState<Location[]>([]);
 
     const watchId = useRef<number>();
+    // const isMounted = useRef(true);
+
+    // useEffect(() => {
+    //     isMounted.current = true;
+
+    //     return () => {
+    //         isMounted.current = false;
+    //     };
+    // }, []);
 
     useEffect(() => {
         getCurrentLocation().then((location) => {
+            // if (!isMounted.current) return;
             setInitialPosition(location);
             setUserLocation(location);
+            setRouteLines((routes) => [...routes, location]);
             setHasLocation(true);
         });
     }, []);
@@ -45,10 +55,12 @@ export const useLocation = () => {
     const followUserLocation = () => {
         watchId.current = Geolocation.watchPosition(
             ({ coords }: GeolocationResponse) => {
-                setUserLocation({
-                    latitude: coords.latitude,
-                    longitude: coords.longitude,
-                });
+                const location: Location = {
+                    latitude: coords?.latitude,
+                    longitude: coords?.longitude,
+                };
+                setUserLocation(location);
+                setRouteLines((routes) => [...routes, location]);
             },
             (err: any) => console.log({ err }),
             {
@@ -71,5 +83,6 @@ export const useLocation = () => {
         followUserLocation,
         userLocation,
         stopFollowUserLocation,
+        routeLines,
     };
 };
