@@ -5,13 +5,18 @@ interface Props {
     iconName: string;
     onPress: () => void;
     style?: StyleProp<ViewStyle>;
+    isActive?: boolean;
 }
 
-const Fab = ({ iconName, onPress, style = {} }: Props) => {
+const Fab = ({ iconName, onPress, style = {}, isActive }: Props) => {
     return (
         <View style={{ ...(style as any) }}>
             <TouchableOpacity activeOpacity={0.7} onPress={onPress} style={styles.blackButton}>
-                <Icon name={iconName} size={29} color="black" />
+                <Icon
+                    name={iconName}
+                    size={25}
+                    color={isActive ? '#006DCC' : 'rgba(100,100,100,0.9)'}
+                />
             </TouchableOpacity>
         </View>
     );
@@ -22,9 +27,9 @@ export default Fab;
 const styles = StyleSheet.create({
     blackButton: {
         zIndex: 999,
-        height: 41,
-        width: 40,
-        backgroundColor: 'rgba(245,245,245,0.7)',
+        height: 40,
+        width: 38,
+        backgroundColor: 'rgba(245,245,245,1)',
         borderRadius: 2,
         justifyContent: 'center',
         alignItems: 'center',
