@@ -13,19 +13,20 @@ export const useLocation = () => {
     const [routeLines, setRouteLines] = useState<Location[]>([]);
 
     const watchId = useRef<number>();
-    // const isMounted = useRef(true);
+    const isMounted = useRef(true);
 
-    // useEffect(() => {
-    //     isMounted.current = true;
+    useEffect(() => {
+        isMounted.current = true;
 
-    //     return () => {
-    //         isMounted.current = false;
-    //     };
-    // }, []);
+        return () => {
+            isMounted.current = false;
+        };
+    }, []);
 
     useEffect(() => {
         getCurrentLocation().then((location) => {
-            // if (!isMounted.current) return;
+            if (!isMounted.current) return;
+
             setInitialPosition(location);
             setUserLocation(location);
             setRouteLines((routes) => [...routes, location]);
